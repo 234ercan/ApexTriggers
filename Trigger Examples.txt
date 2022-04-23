@@ -1,0 +1,108 @@
+Example 1: Before creating a new "Lead Record", change "Lead Source" to "Other" every time automatically
+Example 2: Before creating a new "Lead Record", change "Lead Source" to “Other" automatically if "Lead Source" is empty
+Example 3: Before updating and before inserting a "Lead Record", if "Industry" is empty give error message
+Example 4: Prevent deleting of an Opportunity if Opportunity is  'Closed Won'.
+Example 5: whenever new Account is created append 'TechProTest' end of Account name.
+Example 6. Populate contact description('test purpose contact') when user creates contact
+Example 7. whenever new contact is update show name of user who created it on the description of contact
+Example 8. Throw an error whenever the user try to delete the contact which is associated to account
+Example 9. Create a related contact whenever Account is created
+Example 10. Whenever phone field is updated in account then the name field should also get updated with name and old phone number in accounts
+Example 11. Whenever new account is created with annual revenue more than 50,000 then add existing Dimitri Sharan as contact name
+Example 12. Whenever account is created with industry as banking then create a contact for account, contact last name will be account name and contact phone will be account phone
+Example 13. Whenever account phone is modified then update contact record with phone field (other phone with oldvalue and homephone with new value) associated with account records.
+Example 14. When lead is created or updated then check if the email of lead is already there in existing contacts. If email already exist then throw error.
+Example 15. When a new contact is created for existing account then set contact other phone as account phone
+
+
+
+
+
+trigger RecapAccountTrigger on Account (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
+    if(Trigger.isBefore && Trigger.isInsert){
+        for(Account acc : Trigger.new){
+            if(acc.Type==null){
+                acc.Type='Prospect'; 
+            }
+            if(acc.Industry==null){
+                acc.addError('You must enter industry!');
+            }
+        }
+    }
+    if(Trigger.isBefore && Trigger.isUpdate){
+        System.debug('Before update logic');
+    }
+    if(Trigger.isBefore && Trigger.isDelete){
+        System.debug('Before delete logic');
+    }
+    if(Trigger.isAfter && Trigger.isInsert){
+        System.debug('After Insert Logic');
+    }
+    if(Trigger.isAfter && Trigger.isUpdate){
+        System.debug('After update logic');
+    }
+    if(Trigger.isAfter && Trigger.isDelete){
+        System.debug('After delete logic');
+    }
+    if(Trigger.isAfter && Trigger.isUndelete){
+        System.debug('After undelete logic');
+    } 
+}
+
+
+
+
+//Hanler Class:
+public class RecapAccountHandler {
+    public static void handleBeforeInsert(List<Account> accList){
+        for(Account acc : accList ){
+            
+        }
+    }
+}
+
+
+
+
+
+trigger RecapAccountTrigger on Account (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
+    if(Trigger.isBefore && Trigger.isInsert){
+        //RecapAccountTriggerHandler.handleBeforeInsert(Trigger.new);
+    }
+    
+    if(Trigger.isAfter && Trigger.isInsert){
+        List<Account> acclist=new List<Account>();
+        if(Util.firstRun){
+            Util.firstRun=false;
+            for(Account acc:Trigger.new){
+            Account testAcc=new Account(name=acc.Name+'test');
+            acclist.add(testAcc);
+        }
+        insert acclist;
+        }
+    }
+}
+//When ever a new acount is created , create another test account by appending 'Test' string.
+/* When ever new acount is created create a contact related to that account.
+ *     if(Trigger.isAfter && Trigger.isInsert){
+        List<Contact> cntList=new List<Contact>();
+        for(Account acc: Trigger.new){
+            Contact newCnt=new Contact(LastName='Contact of '+acc.name, AccountId=acc.Id );
+            cntList.add(newCnt);
+        }
+        insert cntList;
+    }
+*/
+/*ne zaman sisteme bir Account girilse Industry fieldi bos ile hata var. Sisteme industry si bos bir account girilmesine izin verme
+* (before insert)
+for(Account acc : Trigger.new){
+if(acc.Industry==null){
+acc.addError('You must enter industry!');
+}
+}*/
+/*Sisteme her Account girildiginde eger tipi bos ile 'Prospect' olarak otomatik degistir. (before insert)
+for(Account acc : Trigger.new){
+if(acc.Type==null){
+acc.Type='Prospect'; 
+}
+}*/
