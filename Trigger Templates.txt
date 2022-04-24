@@ -1,5 +1,5 @@
 trigger AccountTrigger on Account (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
-//First way of seperation Trigger Logics
+//First way of seperation Trigger Logics. This can be used when you have complex trigger.
      if(Trigger.isBefore){
             System.debug('any before logic');
         if(Trigger.isInsert){
