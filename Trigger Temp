@@ -1,4 +1,4 @@
-trigger ContextExampleTrigger on Account (before insert, after insert, after delete) {
+trigger ContextExampleTrigger on Account (before insert, after insert, after delete, after undelete) {
     if (Trigger.isInsert) {
         if (Trigger.isBefore) {
             // Process before insert
